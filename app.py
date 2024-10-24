@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for dark theme and improved search box
+# Custom CSS for dark theme and improved search box, including home button
 st.markdown("""
     <style>
     /* Dark theme */
@@ -28,6 +28,7 @@ st.markdown("""
         color: white !important;
         padding-bottom: 1rem;
         text-align: center !important;
+        margin-left: 3rem !important;
     }
     
     /* Description text styling */
@@ -51,6 +52,21 @@ st.markdown("""
         color: white !important;
         background-color: #262730;
         border: none !important;
+        caret-color: #1E90FF !important;  /* Bright blue cursor */
+    }
+
+    /* Remove the circle in the text input */
+    .stTextInput div[data-baseweb="base-input"] > div > div:last-child {
+        display: none !important;
+    }
+    
+    /* Remove "Press Enter to Apply" */
+    .stTextInput div[data-baseweb="base-input"] {
+        width: 100% !important;
+    }
+    
+    .stTextInput [data-testid="stMarkdownContainer"] {
+        display: none !important;
     }
     
     /* Button styling */
@@ -81,8 +97,56 @@ st.markdown("""
         border-radius: 5px;
         margin: 0.5rem 0;
     }
+    
+    /* Home button styling */
+    .home-button {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        z-index: 999;
+        background: rgba(30, 144, 255, 0.1);
+        padding: 8px;
+        border-radius: 8px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .home-button a {
+        display: flex;
+        color: white;
+        text-decoration: none !important;
+        transition: all 0.3s ease;
+    }
+    
+    .home-button a:hover {
+        color: #1E90FF;
+        transform: scale(1.1);
+    }
+    
+    /* Prevent external link icon from appearing */
+    .home-button a:after {
+        display: none !important;
+    }
+    
+    .home-icon {
+        width: 28px;
+        height: 28px;
+    }
     </style>
     """, unsafe_allow_html=True)
+
+# Add home button with larger, more visible SVG icon
+home_button_html = """
+<div class="home-button">
+    <a href="http://www.club-daguerre.de" target="_self" title="Zur Homepage">
+        <svg class="home-icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <path d="M9 22V12h6v10"></path>
+        </svg>
+    </a>
+</div>
+"""
+st.markdown(home_button_html, unsafe_allow_html=True)
 
 # Title and description with centered alignment
 st.title("Photo Antiquaria Suchmaschine")
@@ -91,8 +155,8 @@ st.markdown('<p class="description">Durchsuchen Sie die Photo Antiquaria Inhalts
 # Add extra spacing before search input
 st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
 
-# Full-width search input
-search_query = st.text_input("Suchbegriff eingeben:", "")
+# Full-width search input with modified behavior
+search_query = st.text_input("Suchbegriff eingeben:", "", key="search_input", on_change=None)
 
 # Centered search button
 search_button = st.button("Suchen", key="search_button")
